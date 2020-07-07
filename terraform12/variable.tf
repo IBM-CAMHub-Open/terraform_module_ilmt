@@ -24,8 +24,7 @@ variable "dependsOn" {
 }
 
 
-variable "enable_vm"            
-{ 
+variable "enable_vm" { 
 	type = string 
 	default = "true"
 }
