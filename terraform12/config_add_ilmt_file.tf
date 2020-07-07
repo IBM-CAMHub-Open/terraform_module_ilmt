@@ -6,7 +6,7 @@ resource "null_resource" "create_ilmt_file_dependsOn" {
 
 resource "null_resource" "create_ilmt_file" {
 
-  count = "${var.enable_vm == "true" ? 1 : 0}"
+  count = var.enable_vm == "true" ? 1 : 0
 
   depends_on = [null_resource.create_ilmt_file_dependsOn]
 
@@ -25,12 +25,12 @@ resource "null_resource" "create_ilmt_file" {
   }
 
   provisioner "file" {
-    source      = "${path.module}/scripts/create_ilmt_file.sh"
+    source      = "${path.module}/../scripts/create_ilmt_file.sh"
     destination = "/tmp/create_ilmt_file.sh"
   }
 
   provisioner "file" {
-    source      = "${path.module}/scripts/ibm.com_Terraform_Automation-2.0.0.swidtag"
+    source      = "${path.module}/../scripts/ibm.com_Terraform_Automation-2.0.0.swidtag"
     destination = "/tmp/ibm.com_Terraform_Automation-2.0.0.swidtag"
   }
 
