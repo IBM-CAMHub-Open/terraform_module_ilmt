@@ -32,23 +32,21 @@ To use the module in your deployment, include the following module definition in
 
 ```
 module "add_ilmt_file" {
-  source               = "git::https://github.com/IBM-CAMHub-Open/terraform_module_ilmt.git?ref=5.0.0"
+  source = "github.com/IBM-CAMHub-Open/terraform_module_ilmt.git//terraform12?ref=5.0.0"
   
-  enable_vm           = "false"
-
-  private_key          = ""
-  vm_os_password       = ""
-  vm_os_user           = ""
-  vm_ipv4_address_list = ""
+  private_key          = length(var.vm_os_private_ssh_key) == 0 ? "" : base64decode(var.vm_os_private_ssh_key)
+  vm_os_password       = var.vm_os_password
+  vm_os_user           = var.vm_os_user
+  vm_ipv4_address_list = [var.vm_ipv4_address]
   #######
-  bastion_host        = "${var.bastion_host}"
-  bastion_user        = "${var.bastion_user}"
-  bastion_private_key = "${var.bastion_private_key}"
-  bastion_port        = "${var.bastion_port}"
-  bastion_host_key    = "${var.bastion_host_key}"
-  bastion_password    = "${var.bastion_password}"
+  bastion_host        = var.bastion_host
+  bastion_user        = var.bastion_user
+  bastion_private_key = length(var.bastion_private_key) > 0 ? base64decode(var.bastion_private_key) : var.bastion_private_key
+  bastion_port        = var.bastion_port
+  bastion_host_key    = var.bastion_host_key
+  bastion_password    = var.bastion_password
   #######    
-  dependsOn            = "${module.deployVM.dependsOn}"
+  dependsOn           = vsphere_virtual_machine.vm.id
 }
 ```
 
@@ -69,15 +67,9 @@ In the above sample usage, the module requires:
 **Module dependency on terraform deploy**:
 - *dependsOn* - boolean variable used to set dependencies between modules. The module should run only after the vm has been created so make sure the module creating the vm defines a boolean variable that can be used as input for the config_add_ilmt_file dependsOn variable. In the sample code above, the vm is created by the deployVM module, which defines a boolean variable also called dependsOn. We use the module.deployVM.dependsOn as input for config_add_ilmt_file dependsOn variable to build the modules dependencies.
 
-## Other templates using this module
+## Example Usage of this module
 
-This module is currently being used by the CAM ICP modules to register the ICP deployed vms with the ILMT tool.
-You can use these templates as samples on how to include the config_add_ilmt_file module in your terraform templates.
-
-ICP templates using the *config_add_ilmt_file* module :
-
-https://github.com/IBM-CAMHub-Open/template_icp_installer_single
-
-https://github.com/IBM-CAMHub-Open/template_icp_installer_medium
+You can use [Single Virtual Machine with Private SSH Key](https://github.com/IBM-CAMHub-Open/starterlibrary/tree/2.4/VMware/terraform/hcl/singleVMWithPrivateSSHKey) as a sample on how to include the config_add_ilmt_file 
+module in your terraform templates.
 
 
