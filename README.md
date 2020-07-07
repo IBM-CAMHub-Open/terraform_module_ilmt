@@ -32,7 +32,7 @@ To use the module in your deployment, include the following module definition in
 
 ```
 module "add_ilmt_file" {
-  source               = "git::https://github.com/IBM-CAMHub-Open/terraform-modules.git?ref=5.0.0//config_add_ilmt_file"
+  source               = "git::https://github.com/IBM-CAMHub-Open/terraform_module_ilmt.git?ref=5.0.0"
   
   enable_vm           = "false"
 
